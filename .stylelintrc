@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "at-rule-name-case": "lower",
+    "no-eol-whitespace": true,
+    "no-extra-semicolons": true,
+    "length-zero-no-unit": true,
+    "number-leading-zero": "always",
+    "color-hex-case": "lower",
+    "color-hex-length": "short",
+    "color-no-invalid-hex": true,
+    "function-name-case": "lower",
+    "media-feature-name-case": "lower",
+    "property-case": "lower",
+    "selector-pseudo-class-case": "lower",
+    "selector-pseudo-element-case": "lower",
+    "selector-type-case": "lower",
+    "unit-case": "lower",
+    "value-keyword-case": "lower",
+    "indentation": 2,
+    "declaration-block-trailing-semicolon": "always",
+    "declaration-colon-space-after": "always",
+    "declaration-colon-space-before": "never",
+    "block-opening-brace-space-before": "always",
+    "selector-list-comma-newline-after": "always",
+    "rule-empty-line-before": "always",
+    "font-family-name-quotes": "always-where-recommended",
+    "function-url-quotes": "never",
+    "string-quotes": "double"
+  }
+}

@@ -21,6 +21,7 @@
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^2.7.0",
     "htmlhint": "^0.10.1",
-    "prettier": "1.14.3"
+    "prettier": "1.14.3",
+    "stylelint": "^9.6.0"
   }
 }
