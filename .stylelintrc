@@ -1,5 +1,7 @@
 {
+  "plugins": ["stylelint-prettier"],
   "rules": {
+    "prettier/prettier": true,
     "at-rule-name-case": "lower",
     "no-eol-whitespace": true,
     "no-extra-semicolons": true,
@@ -26,5 +28,8 @@
     "font-family-name-quotes": "always-where-recommended",
     "function-url-quotes": "never",
     "string-quotes": "double"
-  }
+  },
+  "extends": [
+    "stylelint-config-prettier"
+  ]
 }

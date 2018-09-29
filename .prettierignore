@@ -3,6 +3,7 @@
 .htmlhintrc
 .prettierrc
 .prettierignore
+.stylelintrc
 node_modules
 package.json
 package-lock.json
