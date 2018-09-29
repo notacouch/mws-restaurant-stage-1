@@ -1,0 +1,19 @@
+{
+  "name": "notacouch-restaurant-review-stage-1",
+  "version": "0.0.0",
+  "description": "Udacity Mobile Web Specialist Nanodegree Restaurant Review project Stage 1",
+  "main": "main.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notacouch/mws-restaurant-stage-1.git"
+  },
+  "author": "Abed Islam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notacouch/mws-restaurant-stage-1/issues"
+  },
+  "homepage": "https://github.com/notacouch/mws-restaurant-stage-1#readme"
+}
