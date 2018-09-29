@@ -80,7 +80,8 @@ initMap = () => {
   L.tileLayer(
     'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}',
     {
-      mapboxToken: '<your MAPBOX API KEY HERE>',
+      mapboxToken:
+        'pk.eyJ1Ijoibm90YWNvdWNoIiwiYSI6ImNqbW15OW43NzA3OWIzcm1wNW1xYWx5eWgifQ.4hV2kJCYYEbh3zCU5uGt4Q',
       maxZoom: 18,
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -88,7 +89,7 @@ initMap = () => {
         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       id: 'mapbox.streets',
     }
-  ).addTo(newMap);
+  ).addTo(self.newMap);
 
   updateRestaurants();
 };
