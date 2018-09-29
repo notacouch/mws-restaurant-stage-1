@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/notacouch/mws-restaurant-stage-1/issues"
   },
-  "homepage": "https://github.com/notacouch/mws-restaurant-stage-1#readme"
+  "homepage": "https://github.com/notacouch/mws-restaurant-stage-1#readme",
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^2.7.0",
+    "htmlhint": "^0.10.1",
+    "prettier": "1.14.3"
+  }
 }
