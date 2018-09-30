@@ -182,21 +182,23 @@ nav h1 {
 /* ====================== Restaurant Filtering ====================== */
 
 .filter-options {
+  box-sizing: border-box;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   background-color: #3397db;
   align-items: center;
+  padding: 10px 5px;
 }
 
-.filter-options h2 {
+.filter-options__h2 {
   color: white;
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
-.filter-options select {
+.filter-options__select {
   background-color: white;
   border: 1px solid #fff;
   font-family: Arial, sans-serif;
@@ -205,7 +207,17 @@ nav h1 {
   letter-spacing: 0;
   margin: 10px;
   padding: 0 10px;
-  width: 200px;
+  width: calc(100% - 20px);
+}
+
+@media (min-width: 768px) {
+  .filter-options {
+    padding: 13px 20px;
+  }
+
+  .filter-options__select {
+    width: 200px;
+  }
 }
 
 /* ====================== Restaurant Listing ====================== */
