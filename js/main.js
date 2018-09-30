@@ -176,6 +176,17 @@ createRestaurantHTML = restaurant => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // For a11y purposes, every img tag should at least have a blank alt attribute.
+  // Better than that is to briefly describe the photo, but that information should
+  // come from the content management system or digital asset manager, basically by
+  // whoever uploaded the image, wherever they uploaded it from.
+  //
+  // The settings of the photos vary, it could be outside, inside, of a specific
+  // food item, so we'll have to settle on a generic description. It's better than
+  // just writing the name of the restaurant, because then we would say the name
+  // repeatedly in screen readers, which is a sub-optimal experience, worse than a
+  // blank alt attribute.
+  image.setAttribute('alt', `Photo of or in ${restaurant.name}`);
   li.append(image);
 
   const name = document.createElement('h1');
