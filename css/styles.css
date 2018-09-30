@@ -303,34 +303,6 @@ nav h1 {
 
 /* ====================== Restaurant Details ====================== */
 
-.inside header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
-.inside #map-container {
-  background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 50%;
-}
-
-.inside #map {
-  background-color: #ccc;
-  height: 100%;
-  width: 100%;
-}
-
-.inside #footer {
-  bottom: 0;
-  position: absolute;
-  width: 50%;
-}
-
 #restaurant-name {
   color: #f18200;
   font-family: Arial, sans-serif;
@@ -352,6 +324,7 @@ nav h1 {
 }
 
 #restaurant-cuisine {
+  box-sizing: border-box;
   background-color: #333;
   color: #ddd;
   font-size: 12pt;
@@ -361,19 +334,19 @@ nav h1 {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-  width: 90%;
+  /* width: 90%; */
 }
 
 #restaurant-container,
 #reviews-container {
+  box-sizing: border-box;
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 40px 30px;
-  width: 50%;
+  padding: 15px;
 }
 
 #reviews-container {
-  padding: 30px 40px 80px;
+  padding: 15px;
 }
 
 #reviews-container h2 {
@@ -390,21 +363,64 @@ nav h1 {
 }
 
 #reviews-list li {
+  box-sizing: border-box;
   background-color: #fff;
   border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 0 20px 20px;
+  padding: 10px 20px 20px;
   position: relative;
-  width: 85%;
+  /* width: 85%; */
 }
 
 #reviews-list li p {
   margin: 0 0 10px;
+  max-width: 450px; /* attempt to limit max 75 characters per line */
 }
 
 #restaurant-hours td {
   color: #666;
+}
+
+@media (min-width: 768px) {
+  .inside header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .inside #map-container {
+    background: blue none repeat scroll 0 0;
+    height: 87%;
+    position: fixed;
+    right: 0;
+    top: 80px;
+    width: 50%;
+  }
+
+  .inside #map {
+    background-color: #ccc;
+    height: 100%;
+    width: 100%;
+  }
+
+  .inside #footer {
+    box-sizing: border-box;
+    bottom: 0;
+    position: absolute;
+    width: 50%;
+  }
+
+  #restaurant-container,
+  #reviews-container {
+    padding: 140px 30px 30px;
+    width: 50%;
+  }
+
+  #reviews-container {
+    padding-top: 15px;
+  }
 }
