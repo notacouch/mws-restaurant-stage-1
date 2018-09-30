@@ -1,6 +1,11 @@
 @charset "utf-8";
 /* CSS Document */
 
+/* *:after,
+*:before {
+  box-sizing: border-box;
+} */
+
 body,
 td,
 th,
@@ -82,10 +87,12 @@ section {
 /* ====================== Navigation ====================== */
 
 nav {
+  box-sizing: border-box;
   width: 100%;
   height: 50px;
   background-color: #252831;
   text-align: center;
+  padding: 5px 15px;
 }
 
 nav h1 {
@@ -95,23 +102,24 @@ nav h1 {
 .header__title__link {
   color: #fff;
   font-size: 17px;
-  letter-spacing: 6px;
+  letter-spacing: 5px;
   font-weight: 200;
   text-transform: uppercase;
 }
 
 #breadcrumb {
-  padding: 10px 40px 16px;
+  box-sizing: border-box;
+  padding: 13px 15px;
   list-style: none;
   background-color: #eee;
-  font-size: 17px;
   margin: 0;
 }
 
 /* Display list items side by side */
 
-#breadcrumb li {
+.breadcrumb__list-item {
   display: inline;
+  font-size: 15px;
 }
 
 /* Add a slash symbol (/) before/behind each list item */
@@ -139,6 +147,7 @@ nav h1 {
 @media (min-width: 768px) {
   nav {
     height: 80px;
+    padding-top: 10px;
   }
 
   .header__title__link {
@@ -147,7 +156,12 @@ nav h1 {
   }
 
   #breadcrumb {
-    width: calc(50% - 80px);
+    padding: 13px 30px;
+    width: 50%;
+  }
+
+  .breadcrumb__list-item {
+    font-size: 17px;
   }
 }
 
