@@ -1,10 +1,10 @@
 @charset "utf-8";
 /* CSS Document */
 
-/* *:after,
+*:after,
 *:before {
   box-sizing: border-box;
-} */
+}
 
 body,
 td,
@@ -158,6 +158,9 @@ nav h1 {
   #breadcrumb {
     padding: 13px 30px;
     width: 50%;
+    max-width: calc(1200px * 0.5);
+    margin-right: 50%;
+    margin-left: auto;
   }
 
   .breadcrumb__list-item {
@@ -286,18 +289,44 @@ nav h1 {
   text-transform: uppercase;
 }
 
+/* flexbox for IE11 and whatever else doesn't support display: grid;
+   unfortunately, IE11 doesn't support "@supports" either... */
 @media (min-width: 768px) {
   #restaurants-list {
     padding: 15px 30px;
+    justify-content: space-between;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
   }
 
   #restaurants-list li {
     flex-basis: 270px;
     flex-grow: 1;
     margin: 15px;
+  }
+}
+
+/* Use grid for whatever supports it to solve orphan column issue, w/ flexbox an
+   orphan column will have a flexible or set size that doesn't match the auto
+   column sizes above. We'll use 2-column and 3-column grids. */
+@supports (display: grid) {
+  @media (min-width: 768px) {
+    #restaurants-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 15px;
+    }
+
+    #restaurants-list li {
+      margin: auto;
+      min-width: 270px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    #restaurants-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 }
 
@@ -392,13 +421,19 @@ nav h1 {
     z-index: 1000;
   }
 
+  #maincontent {
+    max-width: 1200px;
+    margin: auto;
+  }
+
   .inside #map-container {
     background: blue none repeat scroll 0 0;
     height: 87%;
     position: fixed;
-    right: 0;
     top: 80px;
     width: 50%;
+    max-width: calc(1200px * 0.5);
+    left: 50%;
   }
 
   .inside #map {
@@ -412,6 +447,8 @@ nav h1 {
     bottom: 0;
     position: absolute;
     width: 50%;
+    max-width: calc(1200px * 0.5);
+    right: 50%;
   }
 
   #restaurant-container,
