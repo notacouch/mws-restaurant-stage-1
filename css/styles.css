@@ -318,7 +318,7 @@ nav h1 {
     }
 
     #restaurants-list li {
-      margin: auto;
+      margin: 0 auto;
       min-width: 270px;
     }
   }
