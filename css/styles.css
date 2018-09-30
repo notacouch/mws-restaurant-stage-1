@@ -223,31 +223,38 @@ nav h1 {
 /* ====================== Restaurant Listing ====================== */
 
 #restaurants-list {
+  box-sizing: border-box;
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
-  padding: 30px 15px 60px;
+  padding: 5px 15px 30px;
   text-align: center;
 }
 
 #restaurants-list li {
+  box-sizing: border-box;
   background-color: #fff;
   border: 2px solid #ccc;
   font-family: Arial, sans-serif;
-  margin: 15px;
+  margin: 15px 0;
   min-height: 380px;
   padding: 0 30px 25px;
   text-align: left;
-  width: 270px;
+  width: 100%;
 }
 
-#restaurants-list .restaurant-img {
+.restaurant-img {
   background-color: #ccc;
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
   min-width: 100%;
+  /* Don't do this, can skew aspect ratio of image
+  min-height: 248px;
+
+  Maintain aspect ratio:
+   */
+  height: auto;
 }
 
 #restaurants-list li h1 {
@@ -277,6 +284,21 @@ nav h1 {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  #restaurants-list {
+    padding: 15px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  #restaurants-list li {
+    flex-basis: 270px;
+    flex-grow: 1;
+    margin: 15px;
+  }
 }
 
 /* ====================== Restaurant Details ====================== */
