@@ -92,7 +92,7 @@ nav h1 {
   margin: auto;
 }
 
-nav h1 a {
+.header__title__link {
   color: #fff;
   font-size: 14pt;
   font-weight: 200;
