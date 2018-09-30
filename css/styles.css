@@ -106,7 +106,6 @@ nav h1 {
   background-color: #eee;
   font-size: 17px;
   margin: 0;
-  width: calc(50% - 80px);
 }
 
 /* Display list items side by side */
@@ -145,6 +144,10 @@ nav h1 {
   .header__title__link {
     font-size: 14pt;
     letter-spacing: 10px;
+  }
+
+  #breadcrumb {
+    width: calc(50% - 80px);
   }
 }
 
