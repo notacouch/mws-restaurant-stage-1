@@ -168,9 +168,15 @@ nav h1 {
 /* ====================== Map ====================== */
 
 #map {
-  height: 400px;
+  height: 250px;
   width: 100%;
   background-color: #ccc;
+}
+
+@media (min-width: 768px) {
+  #map {
+    height: 400px;
+  }
 }
 
 /* ====================== Restaurant Filtering ====================== */

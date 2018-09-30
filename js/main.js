@@ -1,5 +1,6 @@
 let restaurants, neighborhoods, cuisines;
 let newMap;
+let firstBreakpoint = window.matchMedia('(min-width: 768px)').matches;
 const markers = [];
 
 /**
@@ -73,8 +74,12 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 initMap = () => {
   window.newMap = newMap = L.map('map', {
-    center: [40.722216, -73.987501],
-    zoom: 12,
+    // off center slightly more north/west in above mobile for better aesthetics,
+    // off center to the north in mobile since the map details occupies some space
+    center: firstBreakpoint ? [40.720216, -73.977501] : [40.712216, -73.987501],
+    // zoom further out in mobile so we can reduce the overall visual area required
+    // to showcase and interact with the content (restaurants' markers)
+    zoom: firstBreakpoint ? 12 : 11,
     scrollWheelZoom: false,
   });
   L.tileLayer(
