@@ -24,12 +24,9 @@
     "declaration-colon-space-before": "never",
     "block-opening-brace-space-before": "always",
     "selector-list-comma-newline-after": "always",
-    "rule-empty-line-before": "always",
+    "rule-empty-line-before": ["always", { "severity": "warning" } ],
     "font-family-name-quotes": "always-where-recommended",
     "function-url-quotes": "never",
     "string-quotes": "double"
-  },
-  "extends": [
-    "stylelint-config-prettier"
-  ]
+  }
 }
