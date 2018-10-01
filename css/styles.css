@@ -459,7 +459,7 @@ nav h1 {
   padding: 0;
 }
 
-#reviews-list li {
+.reviews-list__review {
   box-sizing: border-box;
   background-color: #fff;
   border: 2px solid #f3f3f3;
@@ -472,7 +472,7 @@ nav h1 {
   /* width: 85%; */
 }
 
-#reviews-list li p {
+.reviews-list__review p {
   margin: 0 0 10px;
   max-width: 450px; /* attempt to limit max 75 characters per line */
 }
