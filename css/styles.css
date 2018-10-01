@@ -232,11 +232,28 @@ nav h1 {
   margin-left: 0; /* maintain grid alignment */
 }
 
+/*
+  https://github.com/WICG/focus-visible#2-update-your-css
+  This will hide the focus indicator if the element receives focus via the mouse,
+  but it will still show up on keyboard focus.
+*/
+
+.filter-options__h2:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* The filter options is on a blue background, so browser defaults may not even
    be visible. Utility reference:
    http://paletton.com/#uid=13w0u0kqbOpf9Uvl2RhvWL1G+v- */
 
-#filter-options__h2:focus {
+.js-focus-visible .filter-options__h2.focus-visible {
+  outline: #155fa1 auto;
+}
+
+/* We create a duplicate rule b/c when the pseudo element is not supported,
+   using it as another comma-delimited selector could kill the rule altogether. */
+
+#filter-options__h2:focus-visible {
   outline: #155fa1 auto;
 }
 

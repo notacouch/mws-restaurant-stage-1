@@ -25,5 +25,8 @@
     "stylelint": "^9.6.0",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-prettier": "^1.0.2"
+  },
+  "dependencies": {
+    "focus-visible": "^4.1.5"
   }
 }
