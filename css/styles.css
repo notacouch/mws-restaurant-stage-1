@@ -108,7 +108,7 @@ section {
 
 /* ====================== Navigation ====================== */
 
-nav {
+.main-nav {
   box-sizing: border-box;
   width: 100%;
   height: 50px;
@@ -117,7 +117,7 @@ nav {
   padding: 5px 15px;
 }
 
-nav h1 {
+.main-nav h1 {
   margin: auto;
 }
 
@@ -146,7 +146,7 @@ nav h1 {
 
 /* Add a slash symbol (/) before/behind each list item */
 
-#breadcrumb li + li:before {
+#breadcrumb span + span:before {
   padding: 8px;
   color: black;
   content: "/\00a0";
@@ -154,20 +154,20 @@ nav h1 {
 
 /* Add a color to all links inside the list */
 
-#breadcrumb li a {
+#breadcrumb span a {
   color: #0275d8;
   text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 
-#breadcrumb li a:hover {
+#breadcrumb span a:hover {
   color: #01447e;
   text-decoration: underline;
 }
 
 @media (min-width: 768px) {
-  nav {
+  .main-nav {
     height: 80px;
     padding-top: 10px;
   }
@@ -472,6 +472,11 @@ nav h1 {
   /* width: 85%; */
 }
 
+.reviews-list__review time {
+  display: block;
+}
+
+.reviews-list__review time,
 .reviews-list__review p {
   margin: 0 0 10px;
   max-width: 450px; /* attempt to limit max 75 characters per line */

@@ -172,10 +172,11 @@ createReviewHTML = review => {
   reviewNode.className = 'reviews-list__review';
 
   const name = document.createElement('p');
+  name.className = 'author';
   name.innerHTML = review.name;
   reviewNode.appendChild(name);
 
-  const date = document.createElement('p');
+  const date = document.createElement('time');
   date.innerHTML = review.date;
   reviewNode.appendChild(date);
 
@@ -195,10 +196,10 @@ createReviewHTML = review => {
  */
 fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
-  const li = document.createElement('li');
-  li.className = 'breadcrumb__list-item';
-  li.innerHTML = restaurant.name;
-  breadcrumb.appendChild(li);
+  const span = document.createElement('span');
+  span.className = 'breadcrumb__list-item';
+  span.innerHTML = restaurant.name;
+  breadcrumb.appendChild(span);
 };
 
 /**
