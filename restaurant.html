@@ -17,6 +17,10 @@
   <header class="header">
     <!-- Beginning nav -->
     <nav class="main-nav">
+      <!-- We skip to container instead of the h1, b/c the h1 causes the page to scroll to it,
+           if the viewport is > 768px, the h1 will tuck underneath the nav/breadcrumb, so the
+           user won't even be able to see it. -->
+      <a href="#restaurant-container" class="sr-only sr-only--focusable">Skip to main content</a>
       <h1><a href="/" class="header__title__link">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
@@ -31,7 +35,7 @@
   <!-- Beginning main -->
   <main id="maincontent">
     <!-- Beginning restaurant -->
-    <section id="restaurant-container">
+    <section id="restaurant-container" class="restaurant-container" tabindex="-1">
       <h1 id="restaurant-name"></h1>
       <img alt="" id="restaurant-img">
       <div id="restaurant-cuisine"></div>
@@ -63,6 +67,10 @@
   <script src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script src="js/restaurant_info.js"></script>
+  <!-- :focus-visible polyfill dependency which older browsers may not support, and IE11 has limited support -->
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"></script>
+  <!-- non high-fidelity polyfill for :focus-ring -->
+  <script src="/node_modules/focus-visible/dist/focus-visible.min.js"></script>
 
 </body>
 

@@ -250,7 +250,8 @@ section {
    be visible. Utility reference:
    http://paletton.com/#uid=13w0u0kqbOpf9Uvl2RhvWL1G+v- */
 
-.js-focus-visible .filter-options__h2.focus-visible {
+.js-focus-visible .filter-options__h2.focus-visible,
+.js-focus-visible .restaurant-container.focus-visible {
   outline: #155fa1 auto;
 }
 
@@ -261,7 +262,8 @@ section {
   outline: auto;
 } */
 
-#filter-options__h2:focus-visible {
+#filter-options__h2:focus-visible,
+#restaurant-container:focus-visible {
   outline: #155fa1 auto;
 }
 
