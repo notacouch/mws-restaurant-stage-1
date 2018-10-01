@@ -340,7 +340,7 @@ section {
   height: auto;
 }
 
-.restaurants-list__restaurant h1 {
+.restaurants-list__restaurant h3 {
   color: #f18200;
   font-family: Arial, sans-serif;
   font-size: 14pt;

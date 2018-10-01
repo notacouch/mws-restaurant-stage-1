@@ -146,7 +146,6 @@ resetRestaurants = restaurants => {
   // Remove all restaurants
   self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
-  ul.innerHTML = '';
 
   // Remove all map markers
   if (self.markers) {
@@ -190,7 +189,7 @@ createRestaurantHTML = restaurant => {
   image.setAttribute('alt', `Photo of or in ${restaurant.name}`);
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
