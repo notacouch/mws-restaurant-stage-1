@@ -238,9 +238,13 @@ nav h1 {
   but it will still show up on keyboard focus.
 */
 
-.filter-options__h2:focus:not(:focus-visible) {
+/* .filter-options__h2:focus:not(:-moz-focusring) {
   outline: none;
-}
+} */
+
+/* .filter-options__h2:focus:not(:focus-visible) {
+  outline: none;
+} */
 
 /* The filter options is on a blue background, so browser defaults may not even
    be visible. Utility reference:
@@ -250,8 +254,12 @@ nav h1 {
   outline: #155fa1 auto;
 }
 
-/* We create a duplicate rule b/c when the pseudo element is not supported,
+/* We create duplicate rules b/c when the pseudo class is not supported,
    using it as another comma-delimited selector could kill the rule altogether. */
+
+/* #filter-options__h2:-moz-focusring:not(:focus) {
+  outline: auto;
+} */
 
 #filter-options__h2:focus-visible {
   outline: #155fa1 auto;
