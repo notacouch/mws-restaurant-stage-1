@@ -246,13 +246,26 @@ section {
   outline: none;
 } */
 
+.restaurant-container:focus:not(.focus-visible),
+#reviews-container:focus:not(.focus-visible) {
+  outline: none;
+}
+
 /* The filter options is on a blue background, so browser defaults may not even
    be visible. Utility reference:
    http://paletton.com/#uid=13w0u0kqbOpf9Uvl2RhvWL1G+v- */
 
 .js-focus-visible .filter-options__h2.focus-visible,
-.js-focus-visible .restaurant-container.focus-visible {
+.js-focus-visible .restaurant-container.focus-visible,
+.js-focus-visible #reviews-container.focus-visible {
   outline: #155fa1 auto;
+}
+
+/* When using skip to link, shift content into via below fixed header, works in Chrome
+   (shifting #reviews-container:target directly does not help in FF) */
+
+.js-focus-visible #reviews-container.focus-visible:target {
+  margin-top: 140px;
 }
 
 /* We create duplicate rules b/c when the pseudo class is not supported,
@@ -263,7 +276,8 @@ section {
 } */
 
 #filter-options__h2:focus-visible,
-#restaurant-container:focus-visible {
+#restaurant-container:focus-visible,
+#reviews-container:focus-visible {
   outline: #155fa1 auto;
 }
 
@@ -502,7 +516,7 @@ section {
   }
 
   .inside #map-container {
-    background: blue none repeat scroll 0 0;
+    background: transparent none repeat scroll 0 0;
     height: 87%;
     position: fixed;
     top: 80px;
