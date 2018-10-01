@@ -202,6 +202,10 @@ createRestaurantHTML = restaurant => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  // We leave these as links because, despite looking like buttons, they are intended
+  // to behave as links. I subscribe to the opinion that we should resort to a <button>
+  // tag for <button> kind of activity, e.g. form-related interactions, or to open a
+  // modal or something to that effect.
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
