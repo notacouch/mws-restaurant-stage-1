@@ -221,6 +221,23 @@ nav h1 {
   font-weight: normal;
   line-height: 1;
   margin: 0 10px;
+  /* styles for when this receives focus, i.e. via skip link,
+     - don't span whole line (this changes layout of the filter options section
+       from multiline to single line, for the better imo)
+     - provide padding so the outline doesn't sit flush with the text, also the
+       header is now the same height as the dropdowns.
+     - reset left margin so the text remains aligned with the grid in the meantime */
+  display: inline-block;
+  padding: 10px;
+  margin-left: 0; /* maintain grid alignment */
+}
+
+/* The filter options is on a blue background, so browser defaults may not even
+   be visible. Utility reference:
+   http://paletton.com/#uid=13w0u0kqbOpf9Uvl2RhvWL1G+v- */
+
+#filter-options__h2:focus {
+  outline: #155fa1 auto;
 }
 
 .filter-options__select {

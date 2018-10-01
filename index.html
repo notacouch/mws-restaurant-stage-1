@@ -11,9 +11,10 @@
 </head>
 
 <body>
+
   <header class="header">
     <nav>
-      <a href="#filter-results" class="sr-only sr-only--focusable">Skip to main content</a>
+      <a href="#filter-options__h2" class="sr-only sr-only--focusable">Skip to main content</a>
       <h1><a href="/" class="header__title__link">Restaurant Reviews</a></h1>
     </nav>
   </header>
@@ -22,9 +23,9 @@
     <section id="map-container">
       <div id="map"></div>
     </section>
-    <section id="filter-results" tabindex="0">
+    <section>
       <div class="filter-options">
-        <h2 class="filter-options__h2">Filter Results</h2>
+        <h2 id="filter-options__h2" class="filter-options__h2" tabindex="-1">Filter Results</h2>
         <label class="sr-only" for="neighborhoods-select">Filter by neighborhood:</label>
         <select class="filter-options__select" id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
