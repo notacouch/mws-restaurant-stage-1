@@ -353,6 +353,10 @@ nav h1 {
   text-transform: uppercase;
 }
 
+.restaurants-list__restaurant a:focus {
+  outline: #3397db auto;
+}
+
 /* flexbox for IE11 and whatever else doesn't support display: grid;
    unfortunately, IE11 doesn't support "@supports" either... */
 @media (min-width: 768px) {
