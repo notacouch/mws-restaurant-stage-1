@@ -30,13 +30,13 @@ li {
 }
 
 a {
-  color: orange;
+  color: #ffb324; /* originally orange, brightened for a11y in footer */
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #3397db;
+  color: #9ac9f3; /* originally #3397db, brightened for a11y in header*/
   text-decoration: none;
 }
 
@@ -76,12 +76,17 @@ section {
 
 #footer {
   background-color: #444;
-  color: #aaa;
+  color: #dbdbdb; /* originally #aaa, brightened for a11y */
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+}
+
+#footer a:hover {
+  /* a11y color contrast friendly */
+  color: #9ac9f3;
 }
 
 /* screen-reader-only styles
@@ -155,14 +160,14 @@ section {
 /* Add a color to all links inside the list */
 
 #breadcrumb span a {
-  color: #0275d8;
+  color: #024f97; /* originally #0275d8, darkened for a11y */
   text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 
 #breadcrumb span a:hover {
-  color: #01447e;
+  color: #022850; /* originally #01447e, darkened b/c of above */
   text-decoration: underline;
 }
 
@@ -204,13 +209,17 @@ section {
   }
 }
 
+.leaflet-container a {
+  color: #005c8f !important;
+}
+
 /* ====================== Restaurant Filtering ====================== */
 
 .filter-options {
   box-sizing: border-box;
   width: 100%;
   min-height: 50px;
-  background-color: #3397db;
+  background-color: #145c8f;
   align-items: center;
   padding: 10px 5px;
 }
@@ -255,7 +264,10 @@ section {
    be visible. Utility reference:
    http://paletton.com/#uid=13w0u0kqbOpf9Uvl2RhvWL1G+v- */
 
-.js-focus-visible .filter-options__h2.focus-visible,
+.js-focus-visible .filter-options__h2.focus-visible {
+  outline: #fff auto;
+}
+
 .js-focus-visible .restaurant-container.focus-visible,
 .js-focus-visible #reviews-container.focus-visible {
   outline: #155fa1 auto;
@@ -341,7 +353,7 @@ section {
 }
 
 .restaurants-list__restaurant h3 {
-  color: #f18200;
+  color: #d43900; /* via http://colorsafe.co/, originally #f18200 */
   font-family: Arial, sans-serif;
   font-size: 14pt;
   font-weight: 200;
@@ -357,7 +369,7 @@ section {
 }
 
 .restaurants-list__restaurant a {
-  background-color: orange;
+  background-color: #aa5d00; /* via http://colorsafe.co/, originally orange */
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
@@ -370,7 +382,7 @@ section {
 }
 
 .restaurants-list__restaurant a:focus {
-  outline: #3397db auto;
+  outline: #409dde auto;
 }
 
 /* flexbox for IE11 and whatever else doesn't support display: grid;
@@ -417,7 +429,7 @@ section {
 /* ====================== Restaurant Details ====================== */
 
 #restaurant-name {
-  color: #f18200;
+  color: #d43900; /* via http://colorsafe.co/, originally #f18200 */
   font-family: Arial, sans-serif;
   font-size: 20pt;
   font-weight: 200;
@@ -463,7 +475,7 @@ section {
 }
 
 #reviews-container h2 {
-  color: #f58500;
+  color: #aa5d00; /* via http://colorsafe.co/, originally #f58500 */
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;
