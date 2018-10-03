@@ -188,8 +188,13 @@ createRestaurantHTML = restaurant => {
   const imageWrapper = document.createElement('div');
   imageWrapper.className = 'restaurant-img-sizer';
 
-  const svgAspectRatio = document.createElement('svg');
-  svgAspectRatio.setAttribute('viewbox', '0 0 4 3');
+  // Create XML fragment, not HTML, otherwise setAttribute forces lowercase, though viewBox is case-sensitive
+  // @link https://stackoverflow.com/a/28734954/781824
+  const svgAspectRatio = document.createElementNS(
+    'http://www.w3.org/2000/svg',
+    'svg'
+  );
+  svgAspectRatio.setAttribute('viewBox', '0 0 4 3');
   imageWrapper.append(svgAspectRatio);
 
   const image = document.createElement('img');
