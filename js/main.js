@@ -234,7 +234,12 @@ createRestaurantHTML = restaurant => {
   // tag for <button> kind of activity, e.g. form-related interactions, or to open a
   // modal or something to that effect.
   const more = document.createElement('a');
-  more.innerHTML = 'View Details';
+
+  // Stage 1 review suggested we add attribute aria-label="View details of restaurant name"
+  // so screen readers wouldn't just read "View details". But if we did that I worry
+  // the UA might read both! So we use our hide-to-all-but-screen-readers technique instead.
+  more.innerHTML =
+    'View Details<span class="sr-only"> of ' + restaurant.name + '</span>';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
 
