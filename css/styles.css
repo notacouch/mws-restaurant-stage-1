@@ -347,9 +347,25 @@ section {
   /* Don't do this, can skew aspect ratio of image
   min-height: 248px;
 
-  Maintain aspect ratio:
-   */
+  Maintain aspect ratio later via
   height: auto;
+   */
+}
+
+/* With LazyLoad, we leave src blank, but we still want the images to occupy
+   their space on the screen. */
+
+.restaurant-img[src=""] {
+  height: 0;
+  padding-bottom: 75%;
+}
+
+/* This will occupy the same space since our images are all the same size,
+   hopefully the browser is smart enough to not cause any jank in the process. */
+
+.restaurant-img:not([src=""]) {
+  height: auto;
+  padding-bottom: 0;
 }
 
 .restaurants-list__restaurant h3 {
