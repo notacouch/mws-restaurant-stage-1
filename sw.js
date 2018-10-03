@@ -2,8 +2,6 @@ const appVersion = '0.0.1';
 const cacheID = 'restaurant-reviews-' + appVersion;
 
 // Re-used strings here
-const homePage = 'index.html';
-const detailPage = 'restaurant.html';
 const imgFallback = '/img/ouch.png'; // credit: https://pixabay.com/en/connection-lost-no-connection-cloud-3498366/
 const offlineText = 'Not online right now';
 
@@ -14,8 +12,8 @@ self.addEventListener('install', event => {
       cache
         .addAll([
           '/',
-          '/' + homePage,
-          '/' + detailPage,
+          '/index.html',
+          '/restaurant.html',
           '/css/styles.css',
           '/data/restaurants.json',
           '/js/',
@@ -50,12 +48,10 @@ self.addEventListener('message', event => {
 
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  // restaurant.html or what's coming down the pipe
-  const request =
-    url.pathname === '/' + detailPage ? new Request(detailPage) : event.request;
 
   event.respondWith(
-    caches.match(request).then(
+    // We need ignoreSearch so restaurant.html?id=n always resolves to restaurant.html
+    caches.match(event.request, { ignoreSearch: true }).then(
       cachedResponse =>
         cachedResponse ||
         fetch(event.request)
