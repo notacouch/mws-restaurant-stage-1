@@ -1,7 +1,10 @@
 // Register service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
-    .register('/sw.js')
+    // @todo: There is no way to pass custom data to SW pre-install, e.g. so we
+    //        can determine if IO API is available, so we know which version of
+    //        the LazyLoad package to cache. For now we'll just cache both.
+    .register('/sw.js', { foo: 'bar' })
     .then(register => {
       console.log('SW now in the main gibson ', register, register.scope);
       // This page was not reached via SW

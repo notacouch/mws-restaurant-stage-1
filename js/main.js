@@ -1,5 +1,6 @@
 let restaurants, neighborhoods, cuisines;
 let newMap;
+let lazyLoadInstance = false;
 let firstBreakpoint = window.matchMedia('(min-width: 768px)').matches;
 const markers = [];
 
@@ -129,6 +130,22 @@ updateRestaurants = () => {
       } else {
         resetRestaurants(restaurants);
         fillRestaurantsHTML();
+
+        // Race condition, if LazyLoad has already loaded before the img tags
+        // are rendered, it will never apply to new tags. So we create a new
+        // instance or update the existing ones every time we create new img tags.
+        if (window.LazyLoad) {
+          console.log('LazyLoad available');
+          if (!lazyLoadInstance) {
+            console.log('No lazyLoadInstance, making new one');
+            lazyLoadInstance = new window.LazyLoad(window.lazyLoadOptions);
+          } else {
+            console.log('lazyLoadInstance found, updating...');
+            lazyLoadInstance.update();
+          }
+        } else {
+          console.log('LazyLoad NOT available');
+        }
       }
     }
   );
@@ -168,9 +185,19 @@ createRestaurantHTML = restaurant => {
   const li = document.createElement('article');
   li.className = 'restaurants-list__restaurant';
 
+  const imageWrapper = document.createElement('div');
+  imageWrapper.className = 'restaurant-img-sizer';
+
+  const svgAspectRatio = document.createElement('svg');
+  svgAspectRatio.setAttribute('viewbox', '0 0 4 3');
+  imageWrapper.append(svgAspectRatio);
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // LazyLoad compatibility
+  image.setAttribute('src', ''); // LazyLoad best practice is a blank src. We also utilize this in CSS.
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+
   // For a11y purposes, every img tag should at least have a blank alt attribute.
   // Better than that is to briefly describe the photo, but that information should
   // come from the content management system or digital asset manager, basically by
@@ -182,7 +209,8 @@ createRestaurantHTML = restaurant => {
   // repeatedly in screen readers, which is a sub-optimal experience, worse than a
   // blank alt attribute.
   image.setAttribute('alt', `Photo of or in ${restaurant.name}`);
-  li.append(image);
+  imageWrapper.append(image);
+  li.append(imageWrapper);
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;

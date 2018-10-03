@@ -347,25 +347,24 @@ section {
   /* Don't do this, can skew aspect ratio of image
   min-height: 248px;
 
-  Maintain aspect ratio later via
-  height: auto;
+  Maintain aspect ratio
    */
+  height: auto;
 }
 
 /* With LazyLoad, we leave src blank, but we still want the images to occupy
-   their space on the screen. */
+   their space on the screen. So we create a SVG that always respects aspect ratio,
+   and use grid to force the img to do the same.
 
-.restaurant-img[src=""] {
-  height: 0;
-  padding-bottom: 75%;
+   Credit:
+   @link https://codeburst.io/keeping-aspect-ratio-with-html-and-no-padding-tricks-40705656808b */
+
+.restaurant-img-sizer {
+  display: grid;
 }
 
-/* This will occupy the same space since our images are all the same size,
-   hopefully the browser is smart enough to not cause any jank in the process. */
-
-.restaurant-img:not([src=""]) {
-  height: auto;
-  padding-bottom: 0;
+.restaurant-img-sizer > * {
+  grid-area: 1 / 1 / 2 / 2;
 }
 
 .restaurants-list__restaurant h3 {

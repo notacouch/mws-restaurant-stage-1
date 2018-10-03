@@ -1,4 +1,4 @@
-const appVersion = '0.0.1';
+const appVersion = '0.0.2';
 const cacheID = 'restaurant-reviews-' + appVersion;
 
 // Re-used strings here
@@ -6,7 +6,7 @@ const imgFallback = '/img/ouch.png'; // credit: https://pixabay.com/en/connectio
 const offlineText = 'Not online right now';
 
 self.addEventListener('install', event => {
-  console.log('SW installed!');
+  console.log('SW installed!', event);
   event.waitUntil(
     caches.open(cacheID).then(cache =>
       cache
@@ -22,6 +22,9 @@ self.addEventListener('install', event => {
           '/js/restaurant_info.js',
           '/js/register-sw.js',
           '/node_modules/focus-visible/dist/focus-visible.min.js',
+          // @todo: Use IDB in register-sw to determine which of these should be cached
+          '/node_modules/vanilla-lazyload/dist/lazyload.min.js',
+          '/node_modules/vanilla-lazyload-compat/dist/lazyload.min.js',
           imgFallback,
         ])
         .catch(error => {

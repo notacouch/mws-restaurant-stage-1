@@ -1,3 +1,24 @@
+// Dynamically and conditionally load the proper version of LazyLoad for this
+// browser/device. We put this code here in dbhelper.js b/c this script is in both
+// pages and before other scripts run.
+(function(w, d) {
+  let b = d.getElementsByTagName('body')[0];
+  let s = d.createElement('script');
+  let v = !('IntersectionObserver' in w) ? '-compat' : '';
+  s.async = true; // This includes the script as async. See the "recipes" section for more information about async loading of LazyLoad.
+  s.src = '/node_modules/vanilla-lazyload' + v + '/dist/lazyload.min.js';
+  w.lazyLoadOptions = {
+    elements_selector: '.restaurant-img',
+    callback_load: el => {
+      console.log('element loaded', el);
+    },
+    callback_finish: () => {
+      console.log('lazy load finished');
+    },
+  };
+  b.appendChild(s);
+})(window, document);
+
 /**
  * Common database helper functions.
  */

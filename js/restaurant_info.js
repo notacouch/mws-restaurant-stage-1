@@ -85,7 +85,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // LazyLoad compatibility
+  image.setAttribute('src', ''); // LazyLoad best practice is a blank src. We also utilize this in CSS.
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
   // For a11y purposes, every img tag should at least have a blank alt attribute.
   // Better than that is to briefly describe the photo, but that information should
   // come from the content management system or digital asset manager, basically by
@@ -97,6 +99,17 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // repeatedly in screen readers, which is a sub-optimal experience, worse than a
   // blank alt attribute.
   image.setAttribute('alt', `Photo of or in ${restaurant.name}`);
+
+  // Race condition, if LazyLoad has already loaded before the img tags
+  // are rendered, it will never apply to new tags. So we create a new
+  // instance when we create this new img tag.
+
+  if (window.LazyLoad) {
+    console.log('LazyLoad available');
+    new window.LazyLoad(window.lazyLoadOptions);
+  } else {
+    console.log('LazyLoad NOT available');
+  }
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
