@@ -33,6 +33,8 @@ const urlsToCache = [
   // '/node_modules/vanilla-lazyload/dist/lazyload.min.js',
   // '/node_modules/vanilla-lazyload-compat/dist/lazyload.min.js',
   imgFallback,
+  '/img/icons-192.png',
+  '/img/icons-512.png',
 ];
 
 self.addEventListener('install', event => {
