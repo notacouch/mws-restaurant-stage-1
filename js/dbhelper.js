@@ -2,9 +2,10 @@
 // browser/device. We put this code here in dbhelper.js b/c this script is in both
 // pages and before other scripts run.
 (function(w, d) {
+  const supportsIO = 'IntersectionObserver' in w;
   let b = d.getElementsByTagName('body')[0];
   let s = d.createElement('script');
-  let v = !('IntersectionObserver' in w) ? '-compat' : '';
+  let v = !supportsIO ? '-compat' : '';
   s.async = true; // This includes the script as async. See the "recipes" section for more information about async loading of LazyLoad.
   s.src = '/node_modules/vanilla-lazyload' + v + '/dist/lazyload.min.js';
   w.lazyLoadOptions = {
@@ -17,6 +18,7 @@
     },
   };
   b.appendChild(s);
+  w.lazyLoadSrc = s.src; // save this value globally so we can pass it to IDB & thereby our service worker, too.
 })(window, document);
 
 /**

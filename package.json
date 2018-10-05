@@ -1,6 +1,6 @@
 {
   "name": "notacouch-restaurant-review-stage-1",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Udacity Mobile Web Specialist Nanodegree Restaurant Review project Stage 1",
   "main": "main.js",
   "scripts": {
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "focus-visible": "^4.1.5",
+    "idb": "^2.1.3",
     "vanilla-lazyload": "^10.19.0",
     "vanilla-lazyload-compat": "npm:vanilla-lazyload@8.16.0"
   }

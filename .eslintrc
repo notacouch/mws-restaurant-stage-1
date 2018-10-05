@@ -2,7 +2,7 @@
   "env": {
     "browser": true
   },
-  "parserOptions": { "ecmaVersion": 6 },
+  "parserOptions": { "ecmaVersion": 8 },
   "plugins": ["prettier"],
   "extends": ["prettier"],
   "rules": {
