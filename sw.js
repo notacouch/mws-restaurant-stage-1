@@ -20,7 +20,6 @@ const urlsToCache = [
   '/index.html',
   '/restaurant.html',
   '/css/styles.css',
-  '/data/restaurants.json',
   '/js/',
   '/node_modules/idb/lib/idb.js',
   '/js/dbhelper.js',
