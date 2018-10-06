@@ -4,11 +4,19 @@ const appVersion = '0.0.3';
 const cachePrefix = 'restaurant-reviews-';
 const cacheID = cachePrefix + appVersion;
 const dbName = 'restaurant-reviews';
-const dbVersion = 1;
+const dbVersion = 2;
 const fileTableName = 'feature-based-files';
+const restaurantTableName = 'restaurants';
 
-const dbPromise = idb.open(dbName, dbVersion, upgradeDB => {
-  upgradeDB.createObjectStore(fileTableName);
+const dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
+  if (!upgradeDb.objectStoreNames.contains(fileTableName)) {
+    upgradeDb.createObjectStore(fileTableName);
+  }
+  if (!upgradeDb.objectStoreNames.contains(restaurantTableName)) {
+    upgradeDb.createObjectStore(restaurantTableName);
+  }
+
+  upgradeDb.createObjectStore;
 });
 
 // Re-used strings here

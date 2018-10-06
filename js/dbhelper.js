@@ -21,6 +21,25 @@
   w.lazyLoadSrc = s.src; // save this value globally so we can pass it to IDB & thereby our service worker, too.
 })(window, document);
 
+const dbName = 'restaurant-reviews';
+const dbVersion = 2;
+const fileTableName = 'feature-based-files';
+const restaurantTableName = 'restaurants';
+
+let dbPromise = false;
+if (window.idb) {
+  dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
+    if (!upgradeDb.objectStoreNames.contains(fileTableName)) {
+      upgradeDb.createObjectStore(fileTableName);
+    }
+    if (!upgradeDb.objectStoreNames.contains(restaurantTableName)) {
+      upgradeDb.createObjectStore(restaurantTableName);
+    }
+
+    upgradeDb.createObjectStore;
+  });
+}
+
 /**
  * Common database helper functions.
  */
@@ -38,13 +57,43 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+    let callbackRan = false;
+
+    // Offline first
+    if (dbPromise) {
+      dbPromise.then(db => {
+        db.transaction(restaurantTableName)
+          .objectStore(restaurantTableName)
+          .get('restaurants')
+          .then(restaurants => {
+            if (restaurants && !callbackRan) {
+              callback(null, restaurants);
+              callbackRan = true; // don't conflict with the XHR below
+            }
+          });
+      });
+    }
+    // Even though the above may have returned a value,
+    // if we're online we can grab the latest value behind the scenes.
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
       if (xhr.status === 200) {
         // Got a success response from server!
         const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
+        // if idb fails for some reason, or it's our first time here
+        if (!callbackRan) {
+          callback(null, restaurants);
+          callbackRan = true;
+        }
+        // Store online call, especially if it contains updated information
+        if (dbPromise) {
+          dbPromise.then(db => {
+            const tx = db.transaction(restaurantTableName, 'readwrite');
+            tx.objectStore(restaurantTableName).put(restaurants, 'restaurants');
+            return tx.complete;
+          });
+        }
       } else {
         // Oops!. Got an error from server.
         const error = `Request failed. Returned status of ${xhr.status}`;
