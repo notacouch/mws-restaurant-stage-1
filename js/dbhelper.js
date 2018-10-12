@@ -22,11 +22,24 @@
 })(window, document);
 
 const dbName = 'restaurant-reviews';
-const dbVersion = 2;
+const dbVersion = 3;
 const fileTableName = 'feature-based-files';
 const restaurantTableName = 'restaurants';
+const faveTableName = 'favorite-restaurants';
 
 let dbPromise = false;
+let faveKeyValStore;
+
+window.idbConfig = {
+  dbName,
+  dbVersion,
+  fileTableName,
+  restaurantTableName,
+  faveTableName,
+  dbPromise,
+  faveKeyValStore,
+};
+
 if (window.idb) {
   dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
     if (!upgradeDb.objectStoreNames.contains(fileTableName)) {
@@ -35,9 +48,82 @@ if (window.idb) {
     if (!upgradeDb.objectStoreNames.contains(restaurantTableName)) {
       upgradeDb.createObjectStore(restaurantTableName);
     }
+    if (!upgradeDb.objectStoreNames.contains(faveTableName)) {
+      upgradeDb.createObjectStore(faveTableName, {
+        keyPath: 'restaurantId',
+        autoIncrement: false,
+      });
+    }
 
     upgradeDb.createObjectStore;
   });
+
+  // closure to produce specified version of `const idbKeyval` as seen in idb README:
+  // https://github.com/jakearchibald/idb#keyval-store
+  function newKeyVal(objectStoreName) {
+    return {
+      get(key) {
+        return dbPromise.then(db => {
+          return db
+            .transaction(objectStoreName)
+            .objectStore(objectStoreName)
+            .get(key);
+        });
+      },
+      getAll(query, count) {
+        return dbPromise.then(db => {
+          return db
+            .transaction(objectStoreName)
+            .objectStore(objectStoreName)
+            .getAll(query, count);
+        });
+      },
+      set(key, val) {
+        return dbPromise.then(db => {
+          const tx = db.transaction(objectStoreName, 'readwrite');
+          tx.objectStore(objectStoreName).put(val, key);
+          return tx.complete;
+        });
+      },
+      delete(key) {
+        return dbPromise.then(db => {
+          const tx = db.transaction(objectStoreName, 'readwrite');
+          tx.objectStore(objectStoreName).delete(key);
+          return tx.complete;
+        });
+      },
+      clear() {
+        return dbPromise.then(db => {
+          const tx = db.transaction(objectStoreName, 'readwrite');
+          tx.objectStore(objectStoreName).clear();
+          return tx.complete;
+        });
+      },
+      keys() {
+        return dbPromise.then(db => {
+          const tx = db.transaction(objectStoreName);
+          const keys = [];
+          const store = tx.objectStore(objectStoreName);
+
+          // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
+          // openKeyCursor isn't supported by Safari, so we fall back
+          (store.iterateKeyCursor || store.iterateCursor).call(
+            store,
+            cursor => {
+              if (!cursor) return;
+              keys.push(cursor.key);
+              cursor.continue();
+            }
+          );
+
+          return tx.complete.then(() => keys);
+        });
+      },
+    };
+  }
+
+  idbConfig.dbPromise = dbPromise;
+  idbConfig.faveKeyValStore = faveKeyValStore = newKeyVal(faveTableName);
 }
 
 /**

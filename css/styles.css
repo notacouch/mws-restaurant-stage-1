@@ -359,10 +359,11 @@ section {
 }
 
 .parent-fave-icon--unfaved:hover .fave-icon {
-  fill-opacity: 0.7;
+  fill-opacity: 0.4;
 }
 
 .parent-fave-icon--faved:hover .fave-icon {
+  fill-opacity: 0.7;
 }
 
 .fave-icon {
@@ -521,6 +522,10 @@ section {
 #restaurant-fave {
   top: 31px;
   right: 15px;
+}
+
+.parent-fave-icon--notloaded {
+  display: none;
 }
 
 #restaurant-img {

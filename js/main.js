@@ -181,6 +181,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
+const faveAddLabel = 'Click to add this restaurant to your favorites';
+const faveRemoveLabel = 'Click to remove this restaurant from your favorites';
 createRestaurantHTML = restaurant => {
   const li = document.createElement('article');
   li.className = 'restaurants-list__restaurant';
@@ -221,14 +223,7 @@ createRestaurantHTML = restaurant => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  // Fave icon, fave implementation via IDB to come later
-  const faveIcon = document.createElement('button');
-  faveIcon.className = 'parent-fave-icon parent-fave-icon--unfaved';
-  faveIcon.innerHTML = `<span class="parent-fave-icon__label sr-only">Click to add this restaurant to your favorites!</span>
-    <svg class="fave-icon fave-icon--unfaved" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <use xlink:href="#fave-icon" />
-    </svg>`;
-  li.append(faveIcon);
+  // if idb exists, fave icon will be injected here
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
@@ -251,6 +246,49 @@ createRestaurantHTML = restaurant => {
     'View Details<span class="sr-only"> of ' + restaurant.name + '</span>';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
+
+  // Fave icon, maintain node sequence, supply actual HTML if idb exists
+  if (window.idb && window.idbConfig) {
+    idbConfig.faveKeyValStore.get(restaurant.id).then(favorited => {
+      const faveIcon = document.createElement('button');
+      // accessibility, we can use aria-label confidently as this is a button
+      // https://developer.paciellogroup.com/blog/2017/07/short-note-on-aria-label-aria-labelledby-and-aria-describedby/
+      faveIcon.setAttribute(
+        'aria-label',
+        favorited ? faveRemoveLabel : faveAddLabel
+      );
+      // accessibility, make this a toggle button
+      // https://inclusive-components.design/toggle-button/#aclearerstate
+      faveIcon.setAttribute('aria-pressed', favorited ? 'true' : 'false');
+
+      const faveVariant = favorited ? 'faved' : 'unfaved';
+      faveIcon.className = 'parent-fave-icon parent-fave-icon--' + faveVariant;
+      faveIcon.innerHTML = `<svg class="fave-icon fave-icon--${faveVariant}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#fave-icon" /></svg>`;
+      faveIcon.addEventListener('click', function() {
+        // value in IDB is irrelevant, what user sees now is what they think it is.
+        const svg = this.querySelector('.fave-icon');
+        const svgClass = svg.getAttribute('class');
+
+        if (/unfaved/.test(this.className)) {
+          idbConfig.faveKeyValStore.set(undefined, {
+            restaurantId: restaurant.id,
+          });
+          this.className = this.className.replace(/un/, '');
+          svg.setAttribute('class', svgClass.replace(/un/, ''));
+          faveIcon.setAttribute('aria-pressed', 'true');
+          faveIcon.setAttribute('aria-label', faveRemoveLabel);
+        } else {
+          idbConfig.faveKeyValStore.delete(restaurant.id);
+          this.className = this.className.replace(/faved/, 'unfaved');
+          svg.setAttribute('class', svgClass.replace(/faved/, 'unfaved'));
+          faveIcon.setAttribute('aria-pressed', 'false');
+          faveIcon.setAttribute('aria-label', faveAddLabel);
+        }
+      });
+
+      li.insertBefore(faveIcon, neighborhood);
+    });
+  }
 
   return li;
 };

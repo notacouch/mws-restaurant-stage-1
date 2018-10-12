@@ -75,10 +75,54 @@ fetchRestaurantFromURL = callback => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
+const faveAddLabel = 'Click to add this restaurant to your favorites';
+const faveRemoveLabel = 'Click to remove this restaurant from your favorites';
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
   document.title = restaurant.name + ' - ' + document.title;
+
+  // Fave icon, maintain node sequence, supply actual HTML if idb exists
+  if (window.idb && window.idbConfig) {
+    idbConfig.faveKeyValStore.get(restaurant.id).then(favorited => {
+      const faveIcon = document.getElementById('restaurant-fave');
+      // accessibility, we can use aria-label confidently as this is a button
+      // https://developer.paciellogroup.com/blog/2017/07/short-note-on-aria-label-aria-labelledby-and-aria-describedby/
+      faveIcon.setAttribute(
+        'aria-label',
+        favorited ? faveRemoveLabel : faveAddLabel
+      );
+      // accessibility, make this a toggle button
+      // https://inclusive-components.design/toggle-button/#aclearerstate
+      faveIcon.setAttribute('aria-pressed', favorited ? 'true' : 'false');
+
+      const faveVariant = favorited ? 'faved' : 'unfaved';
+      faveIcon.className = 'parent-fave-icon parent-fave-icon--' + faveVariant;
+
+      const svg = faveIcon.querySelector('.fave-icon');
+      svg.setAttribute('class', `fave-icon fave-icon--${faveVariant}`);
+      faveIcon.addEventListener('click', function() {
+        // value in IDB is irrelevant, what user sees now is what they think it is.
+        const svgClass = svg.getAttribute('class');
+
+        if (/unfaved/.test(this.className)) {
+          idbConfig.faveKeyValStore.set(undefined, {
+            restaurantId: restaurant.id,
+          });
+          this.className = this.className.replace(/un/, '');
+          svg.setAttribute('class', svgClass.replace(/un/, ''));
+          faveIcon.setAttribute('aria-pressed', 'true');
+          faveIcon.setAttribute('aria-label', faveRemoveLabel);
+        } else {
+          idbConfig.faveKeyValStore.delete(restaurant.id);
+          this.className = this.className.replace(/faved/, 'unfaved');
+          svg.setAttribute('class', svgClass.replace(/faved/, 'unfaved'));
+          faveIcon.setAttribute('aria-pressed', 'false');
+          faveIcon.setAttribute('aria-label', faveAddLabel);
+        }
+      });
+    });
+  }
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;

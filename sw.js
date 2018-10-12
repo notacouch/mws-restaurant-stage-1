@@ -4,9 +4,10 @@ const appVersion = '0.0.3';
 const cachePrefix = 'restaurant-reviews-';
 const cacheID = cachePrefix + appVersion;
 const dbName = 'restaurant-reviews';
-const dbVersion = 2;
+const dbVersion = 3;
 const fileTableName = 'feature-based-files';
 const restaurantTableName = 'restaurants';
+const faveTableName = 'favorite-restaurants';
 
 const dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains(fileTableName)) {
@@ -14,6 +15,12 @@ const dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
   }
   if (!upgradeDb.objectStoreNames.contains(restaurantTableName)) {
     upgradeDb.createObjectStore(restaurantTableName);
+  }
+  if (!upgradeDb.objectStoreNames.contains(faveTableName)) {
+    upgradeDb.createObjectStore(faveTableName, {
+      keyPath: 'restaurantId',
+      autoIncrement: false,
+    });
   }
 
   upgradeDb.createObjectStore;
