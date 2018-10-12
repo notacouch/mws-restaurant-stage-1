@@ -15,6 +15,12 @@
 </head>
 
 <body class="inside">
+
+  <div style="height: 0; width: 0; visibility: hidden;">
+    <!-- SVG is free to use/modify, here's the origin: https://en.m.wikipedia.org/wiki/File:Emblem-star.svg -->
+    <svg id="fave-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48"><style>.fave-icon__highlight, .fave-icon__star { fill-opacity: inherit; } .fave-icon__star { stroke: currentColor; stroke-width: inherit; }</style><defs><linearGradient id="b"><stop offset="0" stop-color="#e6cf00"/><stop offset="1" stop-color="#fde94a"/></linearGradient><linearGradient id="a"><stop offset="0" stop-color="#fcf9fb"/><stop offset="1" stop-color="#fcf9fb" stop-opacity="0"/></linearGradient><linearGradient x1="14.66" y1="7.024" x2="24.031" y2="34.826" id="d" xlink:href="#a" gradientUnits="userSpaceOnUse"/><radialGradient cx="24" cy="22" r="22" fx="24" fy="22" id="c" xlink:href="#b" gradientUnits="userSpaceOnUse" gradientTransform="translate(-3.8 6.8)"/></defs><path class="fave-icon__star" stroke-opacity="1" d="M37.31 41.5l-13.28-6.674-13.295 6.645L13.29 27.37l-10.738-10 14.859-2.043L24.069 2.5l6.628 12.84 14.854 2.074-10.762 9.978L37.311 41.5z" fill="url(#c)" stroke="#c4a000"/><path class="fave-icon__highlight" stroke-width="1" stroke-opacity="1" d="M17.732 15.79l6.332-12.203 6.305 12.208L44.44 17.76l-3.62 3.36c-16.437-3.687-9.455 7.221-27.568 9.244l.568-3.18-10.16-9.466 14.072-1.928z" opacity=".8" fill="url(#d)"/><path stroke-width="1" stroke-opacity="1" d="M35.974 39.713l-11.946-6.004-11.945 5.97 2.28-12.67-9.585-8.939 13.278-1.822 6.007-11.57 5.982 11.578 13.278 1.857-9.61 8.922 2.26 12.678z" opacity=".69" fill="none" stroke="#fff"/></svg>
+  </div>
+
   <!-- Beginning header -->
   <header class="header">
     <!-- Beginning nav -->
@@ -39,6 +45,11 @@
     <!-- Beginning restaurant -->
     <section id="restaurant-container" class="restaurant-container" tabindex="-1">
       <h2 id="restaurant-name"></h2>
+      <button id="restaurant-fave" class="parent-fave-icon parent-fave-icon--unfaved">
+        <svg class="fave-icon fave-icon--unfaved" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <use xlink:href="#fave-icon" />
+        </svg>
+      </button>
       <!-- maintain aspect ratio of img, credit:
            @link https://codeburst.io/keeping-aspect-ratio-with-html-and-no-padding-tricks-40705656808b -->
       <div class="restaurant-img-sizer">

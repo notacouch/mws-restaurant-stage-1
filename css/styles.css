@@ -317,6 +317,68 @@ section {
 
 /* ====================== Restaurant Listing ====================== */
 
+/* Fave icon:
+   We use a <button> b/c it's a UI component that has a function, it's not a
+   link that goes somewhere. We need to kill default button styles and behavior
+   so that it looks/feels like you're just interacting with the fave icon.
+
+   Credit for styles:
+   https://stackoverflow.com/a/45890842/781824  */
+
+.parent-fave-icon {
+  background: none;
+  color: #c4a000;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 5px;
+  right: 3px;
+}
+
+.js-focus-visible .parent-fave-icon.focus-visible,
+.parent-fave-icon:active {
+  color: #155fa1;
+}
+
+.parent-fave-icon:focus-visible {
+  color: #155fa1;
+}
+
+.js-focus-visible .parent-fave-icon.focus-visible .fave-icon,
+.parent-fave-icon:active .fave-icon {
+  stroke-width: 2px;
+}
+
+.parent-fave-icon:focus-visible .fave-icon {
+  stroke-width: 2px;
+}
+
+.parent-fave-icon--unfaved:hover .fave-icon {
+  fill-opacity: 0.7;
+}
+
+.parent-fave-icon--faved:hover .fave-icon {
+}
+
+.fave-icon {
+  width: 100%;
+  height: 100%;
+  stroke-opacity: 0;
+}
+
+.fave-icon--faved {
+  fill-opacity: 1;
+}
+
+.fave-icon--unfaved {
+  fill-opacity: 0.1;
+}
+
 #restaurants-list {
   box-sizing: border-box;
   background-color: #f3f3f3;
@@ -336,6 +398,7 @@ section {
   padding: 0 30px 25px;
   text-align: left;
   width: 100%;
+  position: relative;
 }
 
 .restaurant-img {
@@ -452,6 +515,12 @@ section {
   margin: 15px 0 30px;
   text-transform: uppercase;
   line-height: 1.1;
+  padding-right: 30px; /* make room for fave icon */
+}
+
+#restaurant-fave {
+  top: 31px;
+  right: 15px;
 }
 
 #restaurant-img {
@@ -483,6 +552,7 @@ section {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 15px;
+  position: relative;
 }
 
 #reviews-container {
@@ -571,6 +641,11 @@ section {
   #reviews-container {
     padding: 140px 30px 30px;
     width: 50%;
+  }
+
+  #restaurant-container .parent-fave-icon {
+    top: 156px;
+    right: 30px;
   }
 
   #reviews-container {

@@ -221,6 +221,15 @@ createRestaurantHTML = restaurant => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  // Fave icon, fave implementation via IDB to come later
+  const faveIcon = document.createElement('button');
+  faveIcon.className = 'parent-fave-icon parent-fave-icon--unfaved';
+  faveIcon.innerHTML = `<span class="parent-fave-icon__label sr-only">Click to add this restaurant to your favorites!</span>
+    <svg class="fave-icon fave-icon--unfaved" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <use xlink:href="#fave-icon" />
+    </svg>`;
+  li.append(faveIcon);
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
