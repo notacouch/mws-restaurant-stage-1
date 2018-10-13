@@ -96,6 +96,18 @@ self.addEventListener('message', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Once we started using PUT method w/ fetch (for fave/unfave), we get the
+  // following error:
+  // > Uncaught (in promise) TypeError: Request method 'PUT' is unsupported
+  // It turns out it's because this service worker here hooks into the fetch,
+  // and tries to catch it. This will happen with POST requests, too, when we
+  // get to that point.
+  //
+  // https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent#Examples
+  // Let the browser do its default thing
+  // for non-GET requests.
+  if (event.request.method != 'GET') return;
+
   const url = new URL(event.request.url);
 
   event.respondWith(
