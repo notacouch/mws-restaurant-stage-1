@@ -247,7 +247,9 @@ createRestaurantHTML = restaurant => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
 
-  // Fave icon, maintain node sequence, supply actual HTML if idb exists
+  // Fave icon, maintain node sequence, supply actual HTML if idb exists.
+  // I am using IDB instead of a web server because there's no user-based system.
+  // That and I've implemented this before getting started with the Stage 3 server.
   if (window.idb && window.idbConfig) {
     idbConfig.faveKeyValStore.get(restaurant.id).then(favorited => {
       const faveIcon = document.createElement('button');
