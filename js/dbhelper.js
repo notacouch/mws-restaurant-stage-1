@@ -22,13 +22,16 @@
 })(window, document);
 
 const dbName = 'restaurant-reviews';
-const dbVersion = 3;
+const dbVersion = 4;
 const fileTableName = 'feature-based-files';
 const restaurantTableName = 'restaurants';
 const faveTableName = 'favorite-restaurants';
+const reviewTableName = 'review-queue';
+const restaurantReviewsTableName = 'reviews';
 
 let dbPromise = false;
 let faveKeyValStore;
+let reviewKeyValStore;
 
 window.idbConfig = {
   dbName,
@@ -36,8 +39,11 @@ window.idbConfig = {
   fileTableName,
   restaurantTableName,
   faveTableName,
+  reviewTableName,
+  restaurantReviewsTableName,
   dbPromise,
   faveKeyValStore,
+  reviewKeyValStore,
 };
 
 if (window.idb) {
@@ -52,6 +58,14 @@ if (window.idb) {
       upgradeDb.createObjectStore(faveTableName, {
         keyPath: 'restaurantId',
         autoIncrement: false,
+      });
+    }
+    if (!upgradeDb.objectStoreNames.contains(reviewTableName)) {
+      upgradeDb.createObjectStore(reviewTableName);
+    }
+    if (!upgradeDb.objectStoreNames.contains(restaurantReviewsTableName)) {
+      upgradeDb.createObjectStore(restaurantReviewsTableName, {
+        keyPath: 'id',
       });
     }
 
@@ -124,6 +138,55 @@ if (window.idb) {
 
   idbConfig.dbPromise = dbPromise;
   idbConfig.faveKeyValStore = faveKeyValStore = newKeyVal(faveTableName);
+  idbConfig.reviewKeyValStore = reviewKeyValStore = newKeyVal(reviewTableName);
+
+  async function submitQueuedReviews() {
+    const offlineReviews = await idbConfig.reviewKeyValStore.getAll();
+    if (offlineReviews.length) {
+      const restaurants = [];
+      await offlineReviews.forEach(async offlineReview => {
+        await fetch(DBHelper.databaseURL('reviews'), {
+          method: 'POST',
+          body: JSON.stringify(offlineReview),
+        })
+          .then(async response => {
+            // presumed success for posting the submission
+            console.log('Your review has been submitted');
+
+            // keep tabs of which restaurants' reviews need updating in IDB
+            if (!~restaurants.indexOf(offlineReview.restaurant_id)) {
+              restaurants.push(offlineReview.restaurant_id);
+            }
+
+            // delete from IDB
+            await idbConfig.reviewKeyValStore.delete(offlineReview.createdAt);
+
+            // remove notification
+            if (/restaurant\.html/.test(document.location.pathname)) {
+              document
+                .querySelectorAll('.offline-notice')
+                .forEach(notice => notice.remove());
+            }
+          })
+          .catch(error => {
+            console.error('Error posting queued review: ', error);
+          });
+      });
+      // Get service worker to update IDB, so if we refresh the latest reviews
+      // will be available.
+      for (restaurant of restaurants) {
+        fetch(DBHelper.databaseURL('reviews') + '?restaurant_id=' + restaurant);
+      }
+    }
+  }
+
+  submitQueuedReviews();
+
+  window.addEventListener('online', () => {
+    console.log(`You're back online!`);
+    // Post queued reviews
+    submitQueuedReviews();
+  });
 }
 
 /**
@@ -216,8 +279,9 @@ class DBHelper {
           const reviewsResponse = await fetch(
             DBHelper.databaseURL('reviews') + '?restaurant_id=' + restaurant.id
           );
+          console.log('response ', reviewsResponse.clone());
           restaurant.reviews = await reviewsResponse.json();
-
+          console.log('rest and reviews', restaurant.reviews);
           callback(null, restaurant);
         } else {
           // Restaurant does not exist in the database

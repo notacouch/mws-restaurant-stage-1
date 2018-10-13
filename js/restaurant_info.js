@@ -194,25 +194,52 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
       payload[field.name] = field.value;
     }
 
+    // prevent multiple submissions
     reviewForm.remove();
 
-    fetch(DBHelper.databaseURL('reviews'), {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    })
-      .then(response => {
-        const reviewList = fillReviewsHTML([payload]);
+    if (navigator.onLine) {
+      fetch(DBHelper.databaseURL('reviews'), {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      })
+        .then(async response => {
+          const reviewList = await fillReviewsHTML([payload], false);
+          // https://stackoverflow.com/a/24766602/781824
+          const latestReview = reviewList.querySelector(
+            '.reviews-list__review:last-child'
+          );
+          latestReview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // maintain accessibility
+          latestReview.setAttribute('tabindex', '-1');
+          setTimeout(() => {
+            latestReview.focus();
+          }, 700);
+          // Get service worker to update IDB, so if we refresh the latest review
+          // will be available.
+          fetch(
+            DBHelper.databaseURL('reviews') + '?restaurant_id=' + restaurant.id
+          );
+        })
+        .catch(error => {
+          console.error('Error posting review online: ', error);
+        });
+    } else {
+      (async () => {
+        await idbConfig.reviewKeyValStore.set(payload.createdAt, payload);
+        payload.offline = true;
+        const reviewList = await fillReviewsHTML([payload], false);
         // https://stackoverflow.com/a/24766602/781824
         const latestReview = reviewList.querySelector(
           '.reviews-list__review:last-child'
         );
-        latestReview.setAttribute('tabindex', '-1');
         latestReview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // maintain accessibility
+        latestReview.setAttribute('tabindex', '-1');
         setTimeout(() => {
           latestReview.focus();
         }, 700);
-      })
-      .catch(error => {});
+      })();
+    }
   });
 
   // fill reviews
@@ -244,10 +271,24 @@ fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = async (
+  reviews = self.restaurant.reviews,
+  offlineReviews = true
+) => {
   const container = document.getElementById('reviews-container');
 
-  if (!reviews) {
+  if (offlineReviews) {
+    if (!reviews instanceof Array || !reviews instanceof NodeList) {
+      reviews = [];
+    }
+    const offlineReviews = await idbConfig.reviewKeyValStore.getAll();
+    offlineReviews.forEach(offlineReview => {
+      offlineReview.offline = true;
+      reviews.push(offlineReview);
+    });
+  }
+
+  if (!reviews || !reviews.length) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
@@ -267,6 +308,10 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 createReviewHTML = review => {
   const reviewNode = document.createElement('article');
   reviewNode.className = 'reviews-list__review';
+
+  if (review.offline) {
+    reviewNode.innerHTML = `<p class="offline-notice"><em>You were offline while submitting the review. It will be posted once you're back online.</em></p>`;
+  }
 
   const name = document.createElement('p');
   name.className = 'author';

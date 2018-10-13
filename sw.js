@@ -1,13 +1,15 @@
 self.importScripts('/node_modules/idb/lib/idb.js');
 
-const appVersion = '0.0.3';
+const appVersion = '0.0.4';
 const cachePrefix = 'restaurant-reviews-';
 const cacheID = cachePrefix + appVersion;
 const dbName = 'restaurant-reviews';
-const dbVersion = 3;
+const dbVersion = 4;
 const fileTableName = 'feature-based-files';
 const restaurantTableName = 'restaurants';
 const faveTableName = 'favorite-restaurants';
+const reviewTableName = 'review-queue';
+const restaurantReviewsTableName = 'reviews';
 
 const dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains(fileTableName)) {
@@ -22,9 +24,80 @@ const dbPromise = idb.open(dbName, dbVersion, upgradeDb => {
       autoIncrement: false,
     });
   }
+  if (!upgradeDb.objectStoreNames.contains(reviewTableName)) {
+    upgradeDb.createObjectStore(reviewTableName);
+  }
+  if (!upgradeDb.objectStoreNames.contains(restaurantReviewsTableName)) {
+    upgradeDb.createObjectStore(restaurantReviewsTableName, {
+      keyPath: 'id',
+    });
+  }
 
   upgradeDb.createObjectStore;
 });
+
+// closure to produce specified version of `const idbKeyval` as seen in idb README:
+// https://github.com/jakearchibald/idb#keyval-store
+function newKeyVal(objectStoreName) {
+  return {
+    get(key) {
+      return dbPromise.then(db => {
+        return db
+          .transaction(objectStoreName)
+          .objectStore(objectStoreName)
+          .get(key);
+      });
+    },
+    getAll(query, count) {
+      return dbPromise.then(db => {
+        return db
+          .transaction(objectStoreName)
+          .objectStore(objectStoreName)
+          .getAll(query, count);
+      });
+    },
+    set(key, val) {
+      return dbPromise.then(db => {
+        const tx = db.transaction(objectStoreName, 'readwrite');
+        tx.objectStore(objectStoreName).put(val, key);
+        return tx.complete;
+      });
+    },
+    delete(key) {
+      return dbPromise.then(db => {
+        const tx = db.transaction(objectStoreName, 'readwrite');
+        tx.objectStore(objectStoreName).delete(key);
+        return tx.complete;
+      });
+    },
+    clear() {
+      return dbPromise.then(db => {
+        const tx = db.transaction(objectStoreName, 'readwrite');
+        tx.objectStore(objectStoreName).clear();
+        return tx.complete;
+      });
+    },
+    keys() {
+      return dbPromise.then(db => {
+        const tx = db.transaction(objectStoreName);
+        const keys = [];
+        const store = tx.objectStore(objectStoreName);
+
+        // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
+        // openKeyCursor isn't supported by Safari, so we fall back
+        (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
+          if (!cursor) return;
+          keys.push(cursor.key);
+          cursor.continue();
+        });
+
+        return tx.complete.then(() => keys);
+      });
+    },
+  };
+}
+
+restaurantReviewKeyValStore = newKeyVal(restaurantReviewsTableName);
 
 // Re-used strings here
 const imgFallback = '/img/ouch.png'; // credit: https://pixabay.com/en/connection-lost-no-connection-cloud-3498366/
@@ -49,6 +122,7 @@ const urlsToCache = [
   imgFallback,
   '/img/icons-192.png',
   '/img/icons-512.png',
+  '/favicon.ico',
 ];
 
 self.addEventListener('install', event => {
@@ -109,32 +183,85 @@ self.addEventListener('fetch', event => {
   if (event.request.method != 'GET') return;
 
   const url = new URL(event.request.url);
+  const cacheOptions = {};
+  let cacheUrl = url;
+  if (/restaurant\.html/.test(url.pathname)) {
+    cacheOptions.ignoreSearch = true;
+  } else if (/reviews/.test(url.pathname)) {
+    const restaurantId = url.searchParams.get('restaurant_id');
+    if (restaurantId) {
+      event.respondWith(
+        (async () => {
+          let reviews = await restaurantReviewKeyValStore.getAll();
+          let matchingReviews = [];
+          reviews.forEach(review => {
+            if (review.restaurant_id == restaurantId) {
+              // not ===, the data type is not consistent
+              matchingReviews.push(review);
+            }
+          });
+
+          if (matchingReviews.length) {
+            fetch(url).then(async freshResponse => {
+              const freshReviews = await freshResponse.json();
+              if (freshReviews.length) {
+                // sync idb by deleting all existing reviews for current restaurant
+                restaurantReviewKeyValStore.getAll().then(async oldReviews => {
+                  await oldReviews.forEach(async oldReview => {
+                    if (oldReview.restaurant_id == restaurantId) {
+                      await restaurantReviewKeyValStore.delete(oldReview.id);
+                    }
+                  });
+                  freshReviews.forEach(freshReview =>
+                    restaurantReviewKeyValStore.set(undefined, freshReview)
+                  );
+                });
+              }
+            });
+
+            return new Response(JSON.stringify(matchingReviews), {
+              headers: { 'Content-Type': 'application/json' },
+            });
+          } else {
+            let reviewsClone;
+            await fetch(url).then(async freshResponse => {
+              reviewsClone = freshResponse.clone();
+              const freshReviews = await freshResponse.json();
+              if (freshReviews.length) {
+                freshReviews.forEach(review =>
+                  restaurantReviewKeyValStore.set(undefined, review)
+                );
+              }
+            });
+            return reviewsClone;
+          }
+        })()
+      );
+      return;
+    }
+  }
 
   event.respondWith(
     // We need ignoreSearch so restaurant.html?id=n always resolves to restaurant.html
-    caches
-      .match(event.request, {
-        ignoreSearch: /restaurant\.html/.test(url.pathname),
-      })
-      .then(
-        cachedResponse =>
-          cachedResponse ||
-          fetch(event.request)
-            .then(freshResponse =>
-              caches.open(cacheID).then(cache => {
-                cache.put(event.request, freshResponse.clone());
-                return freshResponse;
-              })
-            )
-            .catch(
-              error =>
-                url.pathname.endsWith('.jpg')
-                  ? caches.match(imgFallback)
-                  : new Response(offlineText, {
-                      status: 404,
-                      statusText: offlineText,
-                    })
-            )
-      )
+    caches.match(cacheUrl, cacheOptions).then(
+      cachedResponse =>
+        cachedResponse ||
+        fetch(event.request)
+          .then(freshResponse =>
+            caches.open(cacheID).then(cache => {
+              cache.put(cacheUrl, freshResponse.clone());
+              return freshResponse;
+            })
+          )
+          .catch(
+            error =>
+              url.pathname.endsWith('.jpg')
+                ? caches.match(imgFallback)
+                : new Response(offlineText, {
+                    status: 404,
+                    statusText: offlineText,
+                  })
+          )
+    )
   );
 });
