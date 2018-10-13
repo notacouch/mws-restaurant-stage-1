@@ -132,11 +132,20 @@ if (window.idb) {
 class DBHelper {
   /**
    * Database URL.
-   * Change this to restaurants.json file location on your server.
+   * Basic getter for restaurant retrieval URL.
    */
   static get DATABASE_URL() {
+    return DBHelper.databaseURL();
+  }
+
+  /**
+   * Database URL.
+   * Change this to the API endpoint for Stage 3.
+   * Can switch between reviews and restaurants.
+   */
+  static databaseURL(dataType = 'restaurants') {
     const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants/`;
+    return `http://localhost:${port}/${dataType}/`;
   }
 
   /**
@@ -194,13 +203,21 @@ class DBHelper {
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.fetchRestaurants(async (error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
         const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) {
           // Got the restaurant
+          // now attach its reviews
+          // stage 3 endpoint for that is:
+          // http://localhost:1337/reviews/?restaurant_id=<restaurant_id>
+          const reviewsResponse = await fetch(
+            DBHelper.databaseURL('reviews') + '?restaurant_id=' + restaurant.id
+          );
+          restaurant.reviews = await reviewsResponse.json();
+
           callback(null, restaurant);
         } else {
           // Restaurant does not exist in the database

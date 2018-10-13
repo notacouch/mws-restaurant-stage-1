@@ -223,7 +223,17 @@ createReviewHTML = review => {
   reviewNode.appendChild(name);
 
   const date = document.createElement('time');
-  date.innerHTML = review.date;
+  // New-to-me Internationalization API, pretty widely-supported, too.
+  // Sample date output that we're looking for: October 26, 2016
+  // but our data is a UNIX timestamp, we can just pass that to Date, though.
+  //
+  // https://stackoverflow.com/a/18648314
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+  date.innerHTML = new Date(review.createdAt).toLocaleString('en-us', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
   reviewNode.appendChild(date);
 
   const rating = document.createElement('p');
