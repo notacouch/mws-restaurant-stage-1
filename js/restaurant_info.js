@@ -309,32 +309,44 @@ createReviewHTML = review => {
   const reviewNode = document.createElement('article');
   reviewNode.className = 'reviews-list__review';
 
-  if (review.offline) {
-    reviewNode.innerHTML = `<p class="offline-notice"><em>You were offline while submitting the review. It will be posted once you're back online.</em></p>`;
+  if (review.error) {
+    reviewNode.innerHTML = `<p class="error-notice"><em>${
+      review.error
+    }</em></p>`;
   }
 
-  const name = document.createElement('p');
-  name.className = 'author';
-  name.innerHTML = review.name;
-  reviewNode.appendChild(name);
+  if (review.offline) {
+    reviewNode.innerHTML += `<p class="offline-notice"><em>You were offline while submitting the review. It will be posted once you're back online.</em></p>`;
+  }
 
-  const date = document.createElement('time');
-  // New-to-me Internationalization API, pretty widely-supported, too.
-  // Sample date output that we're looking for: October 26, 2016
-  // but our data is a UNIX timestamp, we can just pass that to Date, though.
-  //
-  // https://stackoverflow.com/a/18648314
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
-  date.innerHTML = new Date(review.createdAt).toLocaleString('en-us', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-  reviewNode.appendChild(date);
+  if (review.name) {
+    const name = document.createElement('p');
+    name.className = 'author';
+    name.innerHTML = review.name;
+    reviewNode.appendChild(name);
+  }
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  reviewNode.appendChild(rating);
+  if (review.createdAt) {
+    const date = document.createElement('time');
+    // New-to-me Internationalization API, pretty widely-supported, too.
+    // Sample date output that we're looking for: October 26, 2016
+    // but our data is a UNIX timestamp, we can just pass that to Date, though.
+    //
+    // https://stackoverflow.com/a/18648314
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+    date.innerHTML = new Date(review.createdAt).toLocaleString('en-us', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    reviewNode.appendChild(date);
+  }
+
+  if (review.rating) {
+    const rating = document.createElement('p');
+    rating.innerHTML = `Rating: ${review.rating}`;
+    reviewNode.appendChild(rating);
+  }
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;

@@ -224,15 +224,36 @@ self.addEventListener('fetch', event => {
             });
           } else {
             let reviewsClone;
-            await fetch(url).then(async freshResponse => {
-              reviewsClone = freshResponse.clone();
-              const freshReviews = await freshResponse.json();
-              if (freshReviews.length) {
-                freshReviews.forEach(review =>
-                  restaurantReviewKeyValStore.set(undefined, review)
+            await fetch(url)
+              .then(async freshResponse => {
+                reviewsClone = freshResponse.clone();
+                const freshReviews = await freshResponse.json();
+                if (freshReviews.length) {
+                  freshReviews.forEach(review =>
+                    restaurantReviewKeyValStore.set(undefined, review)
+                  );
+                }
+              })
+              .catch(async error => {
+                // Maybe the user is offline and hasn't hit up this restaurant yet,
+                // populate a fake review as a notification and to keep the app running.
+                reviewsClone = new Response(
+                  JSON.stringify([
+                    {
+                      restaurant_id: restaurantId,
+                      createdAt: null,
+                      name: null,
+                      rating: null,
+                      comments: null,
+                      error:
+                        'There was an error while trying to get reviews for this restaurant. Perhaps something was wrong with your connection. Please try again later.',
+                    },
+                  ]),
+                  {
+                    headers: { 'Content-Type': 'application/json' },
+                  }
                 );
-              }
-            });
+              });
             return reviewsClone;
           }
         })()
