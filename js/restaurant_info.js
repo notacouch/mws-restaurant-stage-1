@@ -75,6 +75,10 @@ fetchRestaurantFromURL = callback => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
+const faveOnline = (id, fave) =>
+  fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + fave.toString(), {
+    method: 'PUT',
+  });
 const faveAddLabel = 'Click to add this restaurant to your favorites';
 const faveRemoveLabel = 'Click to remove this restaurant from your favorites';
 fillRestaurantHTML = (restaurant = self.restaurant) => {
@@ -113,12 +117,18 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
           svg.setAttribute('class', svgClass.replace(/un/, ''));
           faveIcon.setAttribute('aria-pressed', 'true');
           faveIcon.setAttribute('aria-label', faveRemoveLabel);
+          // we're not reliant on external data being flagged, so let the rest
+          // of the code run without issue/network requests.
+          faveOnline(restaurant.id, true);
         } else {
           idbConfig.faveKeyValStore.delete(restaurant.id);
           this.className = this.className.replace(/faved/, 'unfaved');
           svg.setAttribute('class', svgClass.replace(/faved/, 'unfaved'));
           faveIcon.setAttribute('aria-pressed', 'false');
           faveIcon.setAttribute('aria-label', faveAddLabel);
+          // we're not reliant on external data being flagged, so let the rest
+          // of the code run without issue/network requests.
+          faveOnline(restaurant.id, false);
         }
       });
     });

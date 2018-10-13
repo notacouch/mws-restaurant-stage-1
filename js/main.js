@@ -285,7 +285,6 @@ createRestaurantHTML = restaurant => {
           faveIcon.setAttribute('aria-label', faveRemoveLabel);
           // we're not reliant on external data being flagged, so let the rest
           // of the code run without issue/network requests.
-          console.log('true');
           faveOnline(restaurant.id, true);
         } else {
           idbConfig.faveKeyValStore.delete(restaurant.id);
@@ -295,7 +294,6 @@ createRestaurantHTML = restaurant => {
           faveIcon.setAttribute('aria-label', faveAddLabel);
           // we're not reliant on external data being flagged, so let the rest
           // of the code run without issue/network requests.
-          console.log('false');
           faveOnline(restaurant.id, false);
         }
       });
