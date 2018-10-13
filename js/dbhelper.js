@@ -11,10 +11,10 @@
   w.lazyLoadOptions = {
     elements_selector: '.restaurant-img',
     callback_load: el => {
-      console.log('element loaded', el);
+      //console.log('element loaded', el);
     },
     callback_finish: () => {
-      console.log('lazy load finished');
+      //console.log('lazy load finished');
     },
   };
   b.appendChild(s);

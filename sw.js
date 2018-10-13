@@ -52,7 +52,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
-  console.log('SW installed!', event);
+  //console.log('SW installed!', event);
 
   // We have determined which LazyLoad version to load and stored it in IDB,
   // retrieve that value and append it to our array of things to cache.
@@ -74,19 +74,19 @@ self.addEventListener('install', event => {
       await cache
         .addAll(lazyLoadSrc ? urlsToCache.concat(lazyLoadSrc) : urlsToCache)
         .catch(error => {
-          console.log('SW installation, cache addAll error: ', error);
+          console.error('SW installation, cache addAll error: ', error);
         });
     })()
   );
 });
 
 self.addEventListener('message', event => {
-  console.log('SW client message has been received');
+  //console.log('SW client message has been received');
   if (event.data.cacheImages) {
-    console.log('SW: Client wants me to cache images...');
+    //console.log('SW: Client wants me to cache images...');
     caches.open(cacheID).then(cache =>
       cache.addAll(event.data.cacheImages).catch(error => {
-        console.log(
+        console.error(
           'SW: Something went wrong caching at least one of the images',
           error
         );
@@ -112,25 +112,29 @@ self.addEventListener('fetch', event => {
 
   event.respondWith(
     // We need ignoreSearch so restaurant.html?id=n always resolves to restaurant.html
-    caches.match(event.request, { ignoreSearch: true }).then(
-      cachedResponse =>
-        cachedResponse ||
-        fetch(event.request)
-          .then(freshResponse =>
-            caches.open(cacheID).then(cache => {
-              cache.put(event.request, freshResponse.clone());
-              return freshResponse;
-            })
-          )
-          .catch(
-            error =>
-              url.pathname.endsWith('.jpg')
-                ? caches.match(imgFallback)
-                : new Response(offlineText, {
-                    status: 404,
-                    statusText: offlineText,
-                  })
-          )
-    )
+    caches
+      .match(event.request, {
+        ignoreSearch: /restaurant\.html/.test(url.pathname),
+      })
+      .then(
+        cachedResponse =>
+          cachedResponse ||
+          fetch(event.request)
+            .then(freshResponse =>
+              caches.open(cacheID).then(cache => {
+                cache.put(event.request, freshResponse.clone());
+                return freshResponse;
+              })
+            )
+            .catch(
+              error =>
+                url.pathname.endsWith('.jpg')
+                  ? caches.match(imgFallback)
+                  : new Response(offlineText, {
+                      status: 404,
+                      statusText: offlineText,
+                    })
+            )
+      )
   );
 });

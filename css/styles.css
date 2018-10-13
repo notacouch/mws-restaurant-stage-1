@@ -572,6 +572,32 @@ section {
   padding-bottom: 1pt;
 }
 
+.review-form__fieldset {
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.review-form__field-label-pair {
+  margin-bottom: 20px;
+}
+
+.review-form__label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.review-form__field {
+  width: 100%;
+}
+
+.review-form__field--textarea {
+  resize: vertical;
+}
+
+.review-form__submit {
+  margin-bottom: 10px;
+}
+
 #reviews-list {
   margin: 0;
   padding: 0;
@@ -598,6 +624,10 @@ section {
 .reviews-list__review p {
   margin: 0 0 10px;
   max-width: 450px; /* attempt to limit max 75 characters per line */
+}
+
+.reviews-list__review:focus {
+  outline: #155fa1 auto;
 }
 
 #restaurant-hours td {
@@ -655,5 +685,30 @@ section {
 
   #reviews-container {
     padding-top: 15px;
+  }
+
+  .review-form__field-label-pair {
+    overflow: hidden;
+    clear: both;
+  }
+
+  .review-form__label {
+    float: left;
+    width: 80px;
+    margin-bottom: 5px;
+  }
+
+  .review-form__field {
+    width: calc(100% - 90px);
+    margin-bottom: 5px;
+  }
+
+  .review-form__field--textarea {
+    resize: vertical;
+  }
+
+  .review-form__submit {
+    clear: both;
+    margin: 5px 0 5px 80px;
   }
 }

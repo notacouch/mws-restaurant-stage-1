@@ -51,7 +51,7 @@ if ('serviceWorker' in navigator) {
     return navigator.serviceWorker
       .register('/sw.js', { foo: 'bar' })
       .then(register => {
-        console.log('SW now in the main gibson ', register, register.scope);
+        //console.log('SW now in the main gibson ', register, register.scope);
         // This page was not reached via SW
         if (!navigator.serviceWorker.controller) {
           const sw = register.active || register.installing;
@@ -73,7 +73,7 @@ if ('serviceWorker' in navigator) {
         }
       })
       .catch(error => {
-        console.log('SW registration failed: ', error);
+        console.error('SW registration failed: ', error);
       });
   })();
 }

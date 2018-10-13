@@ -159,10 +159,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // instance when we create this new img tag.
 
   if (window.LazyLoad) {
-    console.log('LazyLoad available');
+    //console.log('LazyLoad available');
     new window.LazyLoad(window.lazyLoadOptions);
   } else {
-    console.log('LazyLoad NOT available');
+    //console.log('LazyLoad NOT available');
   }
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -172,6 +172,49 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  // review form stuffs
+  const reviewForm = document.getElementById('review-form');
+
+  // add restaurant_id for payload
+  const fieldClassName = 'review-form__field';
+  const restaurantField = document.createElement('input');
+  restaurantField.className = fieldClassName;
+  restaurantField.setAttribute('type', 'hidden');
+  restaurantField.setAttribute('name', 'restaurant_id');
+  restaurantField.setAttribute('value', restaurant.id);
+  reviewForm.append(restaurantField);
+
+  // handle review submission
+  reviewForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const fields = reviewForm.querySelectorAll('.' + fieldClassName);
+    const payload = { createdAt: Date.now() };
+    for (field of fields) {
+      payload[field.name] = field.value;
+    }
+
+    reviewForm.remove();
+
+    fetch(DBHelper.databaseURL('reviews'), {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        const reviewList = fillReviewsHTML([payload]);
+        // https://stackoverflow.com/a/24766602/781824
+        const latestReview = reviewList.querySelector(
+          '.reviews-list__review:last-child'
+        );
+        latestReview.setAttribute('tabindex', '-1');
+        latestReview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          latestReview.focus();
+        }, 700);
+      })
+      .catch(error => {});
+  });
+
   // fill reviews
   fillReviewsHTML();
 };
@@ -203,21 +246,19 @@ fillRestaurantHoursHTML = (
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
 
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
-    return;
+    return noReviews;
   }
   const reviewsList = document.getElementById('reviews-list');
   reviews.forEach(review => {
     reviewsList.appendChild(createReviewHTML(review));
   });
-  container.appendChild(reviewsList);
+
+  return reviewsList;
 };
 
 /**

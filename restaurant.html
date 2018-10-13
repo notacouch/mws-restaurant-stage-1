@@ -76,6 +76,33 @@
     <!-- End map -->
     <!-- Beginning reviews -->
     <section id="reviews-container" tabindex="-1">
+      <form id="review-form" method="POST" action="http://localhost:1337/reviews/">
+        <fieldset class="review-form__fieldset">
+          <legend>Write your own review</legend>
+          <div class="review-form__field-label-pair">
+            <label class="review-form__label" for="write-review-name">Name:</label>
+            <!-- non-empty pattern from: https://stackoverflow.com/questions/13766015/is-it-possible-to-configure-a-required-field-to-ignore-white-space?lq=1#comment48114359_17323588 -->
+            <input class="review-form__field" type="text" id="write-review-name" name="name" placeholder="Your name here" pattern="\S(.*\S)" required>
+          </div>
+          <div class="review-form__field-label-pair">
+            <label class="review-form__label" for="write-review-rating">Rating: </label>
+            <input class="review-form__field" type="range" id="write-review-rating" name="rating" min="1" max="5" list="write-review-rating-ticks" required>
+            <datalist id="write-review-rating-ticks">
+              <option value="1" label="1">
+              <option value="2" label="2">
+              <option value="3" label="3">
+              <option value="4" label="4">
+              <option value="5" label="5">
+            </datalist>
+          </div>
+          <div class="review-form__field-label-pair">
+            <label class="review-form__label" for="write-review-comments">Review: </label>
+            <textarea class="review-form__field review-form__field--textarea" id="write-review-comments" name="comments" rows="7" required></textarea>
+          </div>
+          <button id="write-review-submit" class="review-form__submit" type="submit">Submit review</button>
+        </fieldset>
+      </form>
+      <h2>Reviews</h2>
       <div id="reviews-list"></div>
     </section>
     <!-- End reviews -->
